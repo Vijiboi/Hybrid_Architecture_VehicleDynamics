@@ -1,0 +1,27 @@
+[vehicle]
+sample_time_s = 0.01
+mass_kg = 1650.0
+iz_kgm2 = 3234.0
+lf_m = 1.40
+lr_m = 1.65
+track_front_m = 1.58
+track_rear_m = 1.58
+cg_height_m = 0.55
+gravity_mps2 = 9.81
+
+[ekf]
+beta_std0 = 0.02
+yaw_rate_std0 = 0.05
+delta_fy_bias_std0 = 350.0
+ay_bias_std0 = 0.20
+q_beta = 0.003
+q_yaw_rate = 0.04
+q_delta_fy_bias = 70.0
+q_ay_bias = 0.03
+r_yaw_rate = 0.02
+r_ay = 0.20
+
+[force_model]
+force_clip_n = 10000.0
+left_right_split_clip = 0.35
+rear_torque_split_gain = 0.05

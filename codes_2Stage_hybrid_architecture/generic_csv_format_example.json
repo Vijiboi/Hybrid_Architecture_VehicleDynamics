@@ -1,0 +1,30 @@
+{
+  "imu": {
+    "path": "imu.csv",
+    "header": "infer",
+    "delimiter": ",",
+    "time_col": "time_us",
+    "time_scale_to_us": 1.0,
+    "accel_long_col": "accel_x_mps2",
+    "yaw_rate_col": "yaw_rate_rps"
+  },
+  "gps": {
+    "path": "gps.csv",
+    "header": "infer",
+    "delimiter": ",",
+    "time_col": "time_us",
+    "time_scale_to_us": 1.0,
+    "coordinate_mode": "xy",
+    "x_col": "gps_x_m",
+    "y_col": "gps_y_m"
+  },
+  "ground_truth": {
+    "path": "ground_truth.csv",
+    "header": "infer",
+    "delimiter": ",",
+    "time_col": "time_us",
+    "time_scale_to_us": 1.0,
+    "x_col": "gt_x_m",
+    "y_col": "gt_y_m"
+  }
+}

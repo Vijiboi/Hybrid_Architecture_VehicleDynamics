@@ -1,0 +1,11 @@
+scenario,rows,time_start_s,time_end_s,columns,Iz,Ts,g,l,lf,lr,m
+10_RunTimeDataset_Sine_accel,801,0.0,19.999999999999932,"AY,Alphaf,Alphar,Beta,BetaR,Fxf,Fxr,Fyf,Fyr,Myf,Myr,Time,Vx,Vy,YawAcc,YawR,delta,phi,t,yaw,global_x_m,global_y_m",3234,0.025,9.8,3.05,1.4,1.65,1650
+1_RunTimeDataset_DLC_u85_v60,321,0.0,8.000000000000046,"AY,Alphaf,Alphar,Beta,BetaR,Fxf,Fxr,Fyf,Fyr,Myf,Myr,Time,Vx,Vy,YawAcc,YawR,delta,phi,t,yaw,global_x_m,global_y_m",3234,0.025,9.8,3.05,1.4,1.65,1650
+2_RunTimeDataset_DLC_u3_v60,321,0.0,8.000000000000046,"AY,Alphaf,Alphar,Beta,BetaR,Fxf,Fxr,Fyf,Fyr,Myf,Myr,Time,Vx,Vy,YawAcc,YawR,delta,phi,t,yaw,global_x_m,global_y_m",3234,0.025,9.8,3.05,1.4,1.65,1650
+3_RunTimeDataset_Sine_u85_v60,801,0.0,19.999999999999932,"AY,Alphaf,Alphar,Beta,BetaR,Fxf,Fxr,Fyf,Fyr,Myf,Myr,Time,Vx,Vy,YawAcc,YawR,delta,phi,t,yaw,global_x_m,global_y_m",3234,0.025,9.8,3.05,1.4,1.65,1650
+4_RunTimeDataset_Sine_u3_v60,801,0.0,19.999999999999932,"AY,Alphaf,Alphar,Beta,BetaR,Fxf,Fxr,Fyf,Fyr,Myf,Myr,Time,Vx,Vy,YawAcc,YawR,delta,phi,t,yaw,global_x_m,global_y_m",3234,0.025,9.8,3.05,1.4,1.65,1650
+5_RunTimeDataset_DLC_highSpeed,321,0.0,8.000000000000046,"AY,Alphaf,Alphar,Beta,BetaR,Fxf,Fxr,Fyf,Fyr,Myf,Myr,Time,Vx,Vy,YawAcc,YawR,delta,phi,t,yaw,global_x_m,global_y_m",3234,0.025,9.8,3.05,1.4,1.65,1650
+6_RunTimeDataset_splitmu,1201,0.0,30.0,"AY,Alphaf,Alphar,Beta,BetaR,Fxf,Fxr,Fyf,Fyr,Myf,Myr,Time,Vx,Vy,YawAcc,YawR,delta,phi,t,yaw,global_x_m,global_y_m",3234,0.025,9.8,3.05,1.4,1.65,1650
+7_RunTimeDataset_DLC_brake,279,0.0,6.950000000000031,"AY,Alphaf,Alphar,Beta,BetaR,Fxf,Fxr,Fyf,Fyr,Myf,Myr,Time,Vx,Vy,YawAcc,YawR,delta,phi,t,yaw,global_x_m,global_y_m",3234,0.025,9.8,3.05,1.4,1.65,1650
+8_RunTimeDataset_Sine_brake,801,0.0,19.999999999999932,"AY,Alphaf,Alphar,Beta,BetaR,Fxf,Fxr,Fyf,Fyr,Myf,Myr,Time,Vx,Vy,YawAcc,YawR,delta,phi,t,yaw,global_x_m,global_y_m",3234,0.025,9.8,3.05,1.4,1.65,1650
+9_RunTimeDataset_DLC_accel,286,0.0,7.125000000000034,"AY,Alphaf,Alphar,Beta,BetaR,Fxf,Fxr,Fyf,Fyr,Myf,Myr,Time,Vx,Vy,YawAcc,YawR,delta,phi,t,yaw,global_x_m,global_y_m",3234,0.025,9.8,3.05,1.4,1.65,1650
