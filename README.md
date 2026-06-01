@@ -1,13 +1,27 @@
-# Intelligent Vehicle Dynamics Estimation & Control (Hybrid Transformer-EKF Architecture)
+## Intelligent Vehicle Dynamics Estimation & Control (Hybrid Transformer-EKF Architecture)
 
-A data-driven, real-time cyber-physical system featuring a **Two-Stage Hybrid Architecture**. This system combines deterministic physics-based state estimators (**Extended Kalman Filters**) with deep sequence models (**Force Transformers**) to calculate transient vehicle states, dynamic tire forces, and virtual sensor metrics from noisy simulator data.
+A data-driven, real-time cyber-physical system featuring a **Two-Stage Hybrid Architecture**. This system combines deterministic physics-based state estimators (**Extended Kalman Filters / Unscented Kalman Filters**) with deep sequence models (**Force Transformers**) to calculate transient vehicle states, dynamic tire forces, and virtual sensor metrics from noisy telemetry data.
+
+The repository supports two major validation branches:
+1. Real-world sensor data via the **TUM dataset**.
+2. Converted simulated profiles via the **Vehicle Simulation dataset**.
 
 ---
 
 ## 🛠 System & Repository Architecture
 
-This repository bridges classical control theory with modern deep learning. The directory layout maps directly to our execution pipeline:
-├── codes_2Stage_hybrid_architecture/   # Core algorithm & execution scripts
+This repository bridges classical control theory with modern deep learning. The file tree below represents the structural design of the project components:
+
+```text
+├── codes_allFilters_architectures/     # Main unified execution workflows
+│   ├── nclt_env/                        # Python virtual environment
+│   ├── train_newarch.py                 # Unified training entrypoint for Transformer
+│   ├── run_newarch.py                   # Unified evaluation entrypoint for Hybrid model
+│   ├── run_ukf.py                       # Baseline classical UKF runner
+│   ├── tum_ukf.py                       # Underlying UKF physics configuration
+│   └── convert_sim_to_tum_csv.py        # Mapping script for data unification
+│
+├── codes_2Stage_hybrid_architecture/   # Core algorithms & modules
 │   ├── RUN_GUIDE_miniT.md               # Quick execution notes
 │   ├── vehicle_force_ekf.py            # Physics-based Extended Kalman Filter
 │   ├── sim_force_ekf.py                # Simulation verification wrapper for EKF
@@ -21,16 +35,21 @@ This repository bridges classical control theory with modern deep learning. The 
 │   ├── convert_vehicle_sim_mat_to_csv.py
 │   └── sim_convert_mat_to_csv.py       # Converters for incoming simulator data
 │
-└── datasetforvehiclesimulation_csv/    # Pre-generated simulation test runs
-├── 1_RunTimeDataset_DLC_u85_v60.csv / .json  # Double Lane Change (High Friction)
-├── 5_RunTimeDataset_DLC_highSpeed.csv        # Double Lane Change (High Speed Edge Case)
-├── 6_RunTimeDataset_splitmu.csv              # Split-μ Braking Dynamic Transient Maneuver
-└── 10_RunTimeDataset_Sine_accel.csv          # Sine-wave acceleration matrix
-
----
+├── datasetforvehiclesimulation_csv/    # Pre-generated simulation test runs
+│   ├── 1_RunTimeDataset_DLC_u85_v60.csv / .json  # Double Lane Change (High Friction)
+│   ├── 5_RunTimeDataset_DLC_highSpeed.csv        # Double Lane Change (High Speed Edge Case)
+│   ├── 6_RunTimeDataset_splitmu.csv              # Split-μ Braking Dynamic Transient Maneuver
+│   └── 10_RunTimeDataset_Sine_accel.csv          # Sine-wave acceleration matrix
+│
+├── trainingdata/                       # 14 Real-sensor CSVs from TUM dataset (Train)
+├── testingdata/                        # Real-sensor CSVs from TUM dataset (Test)
+└── params/                             # Physical vehicle metrics & sensor noise profiles
+    └── parameters.toml
+```
 
 ## 🔄 Two-Stage Hybrid Execution Flow
 
+```
 The system processes raw, high-frequency physical data streams through a decoupled, two-stage framework to calculate unmeasurable vehicle states:
                    +---------------------------------------+
                    | Raw Vehicle Sensor Telemetry (.csv)   |
@@ -54,6 +73,7 @@ The system processes raw, high-frequency physical data streams through a decoupl
                    | OUTPUT: Highly Nonlinear Forces &     |
                    | Dynamic Tire-Road Friction Coeff (μ)  |
                    +---------------------------------------+
+```
 
 ### 1. Stage 1: Kinematic Extended Kalman Filtering (EKF)
 * **The Script:** `vehicle_force_ekf.py` & `sim_force_ekf.py`
@@ -65,7 +85,7 @@ The system processes raw, high-frequency physical data streams through a decoupl
 
 ---
 
-## 📊 Dataset Profiles & Maneuvers
+## Dataset Profiles & Maneuvers
 The system is built and cross-validated against diverse vehicle simulation test profiles located in `datasetforvehiclesimulation_csv/`:
 * **Double Lane Change (DLC):** Evaluates high-speed lateral transient stability and weight transfer dynamics under different velocities (`v60`) and surface coefficients (`u85`).
 * **Split-μ Braking:** Simulates severe braking conditions where left and right tires experience completely different grip levels, testing the fusion pipeline's robustness.
@@ -73,7 +93,7 @@ The system is built and cross-validated against diverse vehicle simulation test 
 
 ---
 
-## 🚀 Step-by-Step Run Guide
+## Step-by-Step Run Guide
 
 ###  Environment Setup
 Ensure you have Python 3.10+ installed along with the required scientific computing and deep learning packages:
