@@ -8,21 +8,18 @@ The repository supports two major validation branches:
 
 ---
 
-## 🛠 System & Repository Architecture
+## System & Repository Architecture
 
 This repository bridges classical control theory with modern deep learning. The file tree below represents the structural design of the project components:
 
 ```text
 ├── codes_allFilters_architectures/     # Main unified execution workflows
-│   ├── nclt_env/                        # Python virtual environment
+│   ├── .\nclt_env/                        # Python virtual environment
 │   ├── train_newarch.py                 # Unified training entrypoint for Transformer
 │   ├── run_newarch.py                   # Unified evaluation entrypoint for Hybrid model
 │   ├── run_ukf.py                       # Baseline classical UKF runner
 │   ├── tum_ukf.py                       # Underlying UKF physics configuration
 │   └── convert_sim_to_tum_csv.py        # Mapping script for data unification
-│
-├── codes_2Stage_hybrid_architecture/   # Core algorithms & modules
-│   ├── RUN_GUIDE_miniT.md               # Quick execution notes
 │   ├── vehicle_force_ekf.py            # Physics-based Extended Kalman Filter
 │   ├── sim_force_ekf.py                # Simulation verification wrapper for EKF
 │   ├── sim_train_force_transformer.py  # PyTorch training pipeline for the Transformer model
@@ -34,6 +31,7 @@ This repository bridges classical control theory with modern deep learning. The 
 │   ├── vehicle_sim_loader.py           # Custom PyTorch Dataset/DataLoader wrapper
 │   ├── convert_vehicle_sim_mat_to_csv.py
 │   └── sim_convert_mat_to_csv.py       # Converters for incoming simulator data
+│   └── monte_carlo_error_analysis.py
 │
 ├── datasetforvehiclesimulation_csv/    # Pre-generated simulation test runs
 │   ├── 1_RunTimeDataset_DLC_u85_v60.csv / .json  # Double Lane Change (High Friction)
@@ -41,13 +39,15 @@ This repository bridges classical control theory with modern deep learning. The 
 │   ├── 6_RunTimeDataset_splitmu.csv              # Split-μ Braking Dynamic Transient Maneuver
 │   └── 10_RunTimeDataset_Sine_accel.csv          # Sine-wave acceleration matrix
 │
+├── Result_pictures/
 ├── trainingdata/                       # 14 Real-sensor CSVs from TUM dataset (Train)
 ├── testingdata/                        # Real-sensor CSVs from TUM dataset (Test)
 └── params/                             # Physical vehicle metrics & sensor noise profiles
     └── parameters.toml
+
 ```
 
-## 🔄 Two-Stage Hybrid Execution Flow
+## Two-Stage Hybrid Execution Flow
 
 ```
 The system processes raw, high-frequency physical data streams through a decoupled, two-stage framework to calculate unmeasurable vehicle states:
@@ -119,8 +119,8 @@ This is the real-sensor mini-transformer + EKF pipeline.
 Train on the 14 training CSVs:
 
 ```powershell
-& 'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\codes_allFilters_architectures\nclt_env\Scripts\python.exe' `
-  'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\codes_allFilters_architectures\train_newarch.py' `
+& ' .\nclt_env\Scripts\python.exe' `
+  ' train_newarch.py' `
   --dataset real `
   --train-folder 'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\trainingdata' `
   --params-file 'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\params\parameters.toml' `
@@ -131,8 +131,8 @@ Train on the 14 training CSVs:
 Run the trained model on the TUM test file:
 
 ```powershell
-& 'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\codes_allFilters_architectures\nclt_env\Scripts\python.exe' `
-  'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\codes_allFilters_architectures\run_newarch.py' `
+& ' .\nclt_env\Scripts\python.exe' `
+  ' run_newarch.py' `
   --dataset real `
   --csv 'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\testingdata\data_to_run.csv' `
   --params-file 'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\params\parameters.toml' `
@@ -144,15 +144,15 @@ Run the trained model on the TUM test file:
 You can also train on TUM and evaluate the same architecture on the converted simulation cases, as long as the simulation CSVs are first converted into the same sensor layout:
 
 ```powershell
-& 'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\codes_allFilters_architectures\nclt_env\Scripts\python.exe' `
-  'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\codes_allFilters_architectures\convert_sim_to_tum_csv.py' `
+& ' .\nclt_env\Scripts\python.exe' `
+  ' convert_sim_to_tum_csv.py' `
   --folder 'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\datasetforvehiclesimulation_csv' `
-  --output-folder 'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\codes_allFilters_architectures\sim_tumlike'
+  --output-folder ' sim_tumlike'
 
-& 'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\codes_allFilters_architectures\nclt_env\Scripts\python.exe' `
-  'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\codes_allFilters_architectures\run_newarch.py' `
+& ' .\nclt_env\Scripts\python.exe' `
+  ' run_newarch.py' `
   --dataset real `
-  --csv 'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\codes_allFilters_architectures\sim_tumlike\1_RunTimeDataset_DLC_u85_v60.csv' `
+  --csv ' sim_tumlike\1_RunTimeDataset_DLC_u85_v60.csv' `
   --params-file 'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\params\parameters.toml' `
   --vehicle-config 'real_sensor_vehicle_config.toml' `
   --model 'real_sensor_force_transformer.pt' `
@@ -168,8 +168,8 @@ This is the converted simulation mini-transformer + EKF pipeline.
 Train on the 10 converted simulation CSVs:
 
 ```powershell
-& 'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\codes_allFilters_architectures\nclt_env\Scripts\python.exe' `
-  'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\codes_allFilters_architectures\train_newarch.py' `
+& ' .\nclt_env\Scripts\python.exe' `
+  ' train_newarch.py' `
   --dataset sim `
   --folder 'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\datasetforvehiclesimulation_csv' `
   --model-out 'sim_newarch_force_transformer.pt'
@@ -178,8 +178,8 @@ Train on the 10 converted simulation CSVs:
 Run the trained model on one case:
 
 ```powershell
-& 'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\codes_allFilters_architectures\nclt_env\Scripts\python.exe' `
-  'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\codes_allFilters_architectures\run_newarch.py' `
+& ' .\nclt_env\Scripts\python.exe' `
+  ' run_newarch.py' `
   --dataset sim `
   --csv 'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\datasetforvehiclesimulation_csv\1_RunTimeDataset_DLC_u85_v60.csv' `
   --model 'sim_newarch_force_transformer.pt' `
@@ -192,8 +192,8 @@ Run the same model on all 10 cases:
 Get-ChildItem 'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\datasetforvehiclesimulation_csv' -Filter '*.csv' |
   Where-Object { $_.Name -ne 'scenario_summary.csv' } |
   ForEach-Object {
-    & 'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\codes_allFilters_architectures\nclt_env\Scripts\python.exe' `
-      'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\codes_allFilters_architectures\run_newarch.py' `
+    & ' .\nclt_env\Scripts\python.exe' `
+      ' run_newarch.py' `
       --dataset sim `
       --csv $_.FullName `
       --model 'sim_newarch_force_transformer.pt' `
@@ -208,8 +208,8 @@ This is the classical UKF baseline.
 Run it directly on the TUM test file:
 
 ```powershell
-& 'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\codes_allFilters_architectures\nclt_env\Scripts\python.exe' `
-  'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\codes_allFilters_architectures\run_ukf.py' `
+& ' .\nclt_env\Scripts\python.exe' `
+  ' run_ukf.py' `
   --csv 'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\testingdata\data_to_run.csv' `
   --plot 'tum_ukf_real.png'
 ```
@@ -219,32 +219,65 @@ Run it directly on the TUM test file:
 First convert each simulation CSV into a TUM-like CSV:
 
 ```powershell
-& 'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\codes_allFilters_architectures\nclt_env\Scripts\python.exe' `
-  'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\codes_allFilters_architectures\convert_sim_to_tum_csv.py' `
+& ' .\nclt_env\Scripts\python.exe' `
+  ' convert_sim_to_tum_csv.py' `
   --folder 'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\datasetforvehiclesimulation_csv' `
-  --output-folder 'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\codes_allFilters_architectures\sim_tumlike'
+  --output-folder ' sim_tumlike'
 ```
 
 Then run the same UKF on one converted case:
 
 ```powershell
-& 'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\codes_allFilters_architectures\nclt_env\Scripts\python.exe' `
-  'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\codes_allFilters_architectures\run_ukf.py' `
-  --csv 'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\codes_allFilters_architectures\sim_tumlike\1_RunTimeDataset_DLC_u85_v60.csv' `
+& ' .\nclt_env\Scripts\python.exe' `
+  ' run_ukf.py' `
+  --csv ' sim_tumlike\1_RunTimeDataset_DLC_u85_v60.csv' `
   --plot 'tum_ukf_sim_case1.png'
 ```
 
 Run the same UKF on all 10 converted simulation files:
 
 ```powershell
-Get-ChildItem 'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\codes_allFilters_architectures\sim_tumlike' -Filter '*.csv' |
+Get-ChildItem ' sim_tumlike' -Filter '*.csv' |
   ForEach-Object {
-    & 'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\codes_allFilters_architectures\nclt_env\Scripts\python.exe' `
-      'D:\Downloads_D\Books\Research Papers\Vehicle dynamics\codes_allFilters_architectures\run_ukf.py' `
+    & ' .\nclt_env\Scripts\python.exe' `
+      ' run_ukf.py' `
       --csv $_.FullName `
       --plot ("{0}_ukf.png" -f $_.BaseName)
   }
 ```
+## 5) Robustness & Sensitivity Analysis (Monte Carlo Simulation)
+
+To validate the stability and convergence of the estimators under realistic automotive sensor degradation, the repository includes a stochastic Monte Carlo simulation framework. This tool evaluates tracking performance by injecting zero-mean Gaussian white noise and log-normal covariance perturbations across hundreds of independent trial iterations.
+
+### Core Simulation Scripts
+*   `codes_allFilters_architectures/monte_carlo_error_analysis.py`: Executes the stochastic analysis pass over the proposed 2-Stage Hybrid Transformer-EKF pipeline.
+*   `codes_allFilters_architectures/ukf_monte_carlo_analysis.py`: Runs an identical randomized noise simulation over the classical Unscented Kalman Filter (UKF) baseline to establish comparison metrics.
+
+### Disturbance Model Parameters
+The simulation exposes configuration flags to stress-test the estimation loops against typical automotive sensor tolerances, mounting misalignments, and tuning uncertainties:
+*   **Sensor Noise (1-σ Gaussian):** Adds white noise to key channels (e.g., $\sigma_{a_y} = 0.15\,\text{m/s}^2$, $\sigma_{\dot{\psi}} = 0.03\,\text{rad/s}$).
+*   **Actuator/Line Disturbances:** Elevates brake line pressure noise via `--noise-brake` and torque encoder spikes via `--noise-torque`.
+*   **Covariance Perturbation:** Applies a log-normal random-walk spread (e.g., `--ekf-cov-spread 0.20` for a $\pm20\%$ variation) to matrices $Q$ and $R$ each trial to simulate sub-optimal filter tuning.
+
+### Execution Commands
+
+To execute a 200-trial robustness evaluation on the real-world TUM dataset for both pipelines, run the following commands in your PowerShell environment:
+
+**Proposed Hybrid Transformer-EKF:**
+```powershell
+& ' .\nclt_env\Scripts\python.exe' `
+  ' monte_carlo_error_analysis.py' `
+  --dataset real `
+  --csv '.\testingdata\data_to_run.csv' `
+  --params-file '.\params\parameters.toml' `
+  --vehicle-config 'real_sensor_vehicle_config.toml' `
+  --model 'real_sensor_force_transformer.pt' `
+  --trials 200 `
+  --noise-torque 5.0 `
+  --noise-brake 0.1 `
+  --ekf-cov-spread 0.20 `
+  --out-dir mc_results_real
+  ```
 
 ## Notes
 
